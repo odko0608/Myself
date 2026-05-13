@@ -1,0 +1,925 @@
+<!DOCTYPE html>
+<html lang="mn">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Одбаяр — Portfolio</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:ital,wght@0,300;0,400;0,500;0,600;1,300&family=Playfair+Display:wght@400;700&display=swap" rel="stylesheet"/>
+<style>
+*{margin:0;padding:0;box-sizing:border-box;}
+:root{
+  --orange:#ff8c00;
+  --orange-glow:rgba(255,140,0,0.15);
+  --purple:#c8b8ff;
+  --purple-glow:rgba(200,184,255,0.12);
+  --green:#7fffb3;
+  --green-glow:rgba(127,255,179,0.1);
+  --gold:#ffd93d;
+  --gold-glow:rgba(255,217,61,0.12);
+  --bg:#070710;
+  --bg2:#0c0c18;
+  --surface:rgba(255,255,255,0.025);
+  --border:rgba(255,255,255,0.07);
+  --text:#f0ede8;
+  --text-dim:rgba(240,237,232,0.45);
+  --text-faint:rgba(240,237,232,0.22);
+}
+body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);overflow-x:hidden;}
+
+/* ─── GRAIN OVERLAY ─── */
+body::before{
+  content:'';position:fixed;inset:0;z-index:0;pointer-events:none;
+  background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.04'/%3E%3C/svg%3E");
+  opacity:.6;
+}
+
+/* ─── BLOBS ─── */
+.blob{position:fixed;border-radius:50%;filter:blur(100px);pointer-events:none;z-index:0;animation:drift 18s ease-in-out infinite alternate;}
+.blob-1{width:600px;height:600px;background:radial-gradient(circle,#1a0a45,transparent 70%);top:-200px;left:-200px;animation-duration:20s;}
+.blob-2{width:400px;height:400px;background:radial-gradient(circle,#001835,transparent 70%);bottom:-100px;right:-100px;animation-delay:-8s;animation-duration:16s;}
+.blob-3{width:250px;height:250px;background:radial-gradient(circle,#1a0800,transparent 70%);top:50%;left:40%;animation-delay:-12s;}
+.blob-4{width:180px;height:180px;background:radial-gradient(circle,#0a1a00,transparent 70%);top:20%;right:10%;animation-delay:-5s;animation-duration:22s;}
+@keyframes drift{from{transform:translate(0,0) scale(1)}to{transform:translate(30px,22px) scale(1.08)}}
+
+.container{position:relative;z-index:1;max-width:920px;margin:0 auto;padding:0 2rem;}
+
+/* ─── NAV ─── */
+nav{
+  display:flex;justify-content:space-between;align-items:center;
+  padding:1.8rem 0;
+  border-bottom:0.5px solid var(--border);
+  position:sticky;top:0;z-index:100;
+  background:rgba(7,7,16,0.7);
+  backdrop-filter:blur(20px);
+  -webkit-backdrop-filter:blur(20px);
+  margin:0 -2rem;padding-left:2rem;padding-right:2rem;
+}
+.nav-logo{font-family:'Bebas Neue',cursive;font-size:22px;letter-spacing:4px;color:var(--purple);text-shadow:0 0 30px rgba(200,184,255,0.4);}
+.nav-links{display:flex;gap:2rem;}
+.nav-links a{color:var(--text-faint);text-decoration:none;font-size:11px;letter-spacing:1.8px;text-transform:uppercase;transition:color .25s;font-weight:500;}
+.nav-links a:hover{color:var(--purple);}
+
+/* ─── HERO ─── */
+.hero{padding:5rem 0 2.5rem;display:grid;grid-template-columns:1fr auto;gap:3rem;align-items:center;}
+.hero-eyebrow{font-size:11px;letter-spacing:3px;text-transform:uppercase;color:var(--green);margin-bottom:1.2rem;display:flex;align-items:center;gap:.7rem;}
+.hero-eyebrow::before{content:'';display:block;width:28px;height:1px;background:var(--green);flex-shrink:0;}
+.hero-name{font-family:'Bebas Neue',cursive;font-size:clamp(64px,11vw,100px);line-height:.88;letter-spacing:3px;color:var(--text);margin-bottom:1.6rem;}
+.hero-name span{
+  color:transparent;
+  -webkit-text-stroke:1.5px var(--purple);
+  text-shadow:0 0 60px rgba(200,184,255,0.3);
+}
+.hero-desc{font-size:14px;line-height:1.9;color:var(--text-dim);max-width:440px;margin-bottom:2.2rem;}
+.badge-row{display:flex;gap:.6rem;flex-wrap:wrap;}
+.badge{display:inline-flex;align-items:center;gap:7px;padding:6px 14px;border-radius:100px;font-size:11px;border:0.5px solid;font-weight:500;letter-spacing:.5px;}
+.badge-school{background:rgba(200,184,255,0.07);border-color:rgba(200,184,255,0.28);color:var(--purple);}
+.badge-grade{background:rgba(127,255,179,0.06);border-color:rgba(127,255,179,0.22);color:var(--green);}
+.badge-dot{width:5px;height:5px;border-radius:50%;background:currentColor;opacity:.7;animation:pulse 2s ease-in-out infinite;}
+@keyframes pulse{0%,100%{opacity:.3}50%{opacity:1}}
+
+/* ─── AVATAR ─── */
+.avatar-wrap{width:175px;height:175px;flex-shrink:0;position:relative;}
+.avatar-ring{position:absolute;inset:-14px;border-radius:50%;border:0.5px solid rgba(200,184,255,0.15);animation:spin-slow 24s linear infinite;}
+.avatar-ring::before{content:'';position:absolute;top:0;left:50%;width:9px;height:9px;border-radius:50%;background:var(--purple);transform:translate(-50%,-50%);box-shadow:0 0 12px var(--purple);}
+@keyframes spin-slow{to{transform:rotate(360deg)}}
+.avatar-inner{
+  width:100%;height:100%;border-radius:50%;
+  background:linear-gradient(135deg,#1e0a4a,#0a1a3a);
+  border:0.5px solid rgba(200,184,255,0.15);
+  display:flex;align-items:center;justify-content:center;
+  font-family:'Bebas Neue',cursive;font-size:54px;letter-spacing:2px;color:var(--purple);
+  text-shadow:0 0 30px rgba(200,184,255,0.5);
+}
+
+/* ─── STATS ─── */
+.stats-row{display:grid;grid-template-columns:repeat(3,1fr);gap:1rem;margin:0 0 3rem;}
+.stat{
+  text-align:center;padding:1.4rem 1rem;
+  background:var(--surface);border:0.5px solid var(--border);
+  border-radius:16px;
+  transition:border-color .3s, background .3s;
+}
+.stat:hover{background:rgba(255,255,255,0.04);border-color:rgba(200,184,255,0.2);}
+.stat-number{font-family:'Bebas Neue',cursive;font-size:40px;letter-spacing:1px;color:var(--purple);display:block;line-height:1;}
+.stat-label{font-size:10px;color:var(--text-faint);letter-spacing:1.8px;text-transform:uppercase;margin-top:.4rem;display:block;}
+
+/* ─── DIVIDER ─── */
+.section-divider{display:flex;align-items:center;gap:1rem;margin:2.8rem 0 2rem;}
+.section-divider::before,.section-divider::after{content:'';flex:1;height:0.5px;background:linear-gradient(90deg,transparent,rgba(255,255,255,0.12),transparent);}
+.section-divider span{font-size:10px;letter-spacing:3px;text-transform:uppercase;white-space:nowrap;color:var(--text-faint);}
+
+/* ─── FAMILY SECTION ─── */
+.family-banner{
+  border-radius:20px;overflow:hidden;
+  border:0.5px solid rgba(127,255,179,0.2);
+  background:linear-gradient(135deg,rgba(127,255,179,0.03),rgba(127,255,179,0.01));
+  padding:2rem 2.2rem;
+  margin-bottom:1rem;
+  display:grid;grid-template-columns:auto 1fr;gap:2rem;align-items:center;
+  position:relative;
+}
+.family-banner::before{
+  content:'';position:absolute;inset:0;
+  background:radial-gradient(ellipse at 0% 50%,rgba(127,255,179,0.06),transparent 60%);
+  pointer-events:none;
+}
+.family-icon-wrap{position:relative;z-index:1;}
+.family-icon-big{
+  width:90px;height:90px;border-radius:50%;
+  background:linear-gradient(135deg,rgba(127,255,179,0.15),rgba(127,255,179,0.04));
+  border:0.5px solid rgba(127,255,179,0.25);
+  display:flex;align-items:center;justify-content:center;font-size:40px;
+  box-shadow:0 0 30px rgba(127,255,179,0.08);
+}
+.family-content{position:relative;z-index:1;}
+.family-tag{display:inline-flex;align-items:center;gap:5px;font-size:9px;letter-spacing:2px;text-transform:uppercase;padding:3px 10px;border-radius:100px;background:rgba(127,255,179,0.08);border:0.5px solid rgba(127,255,179,0.22);color:var(--green);margin-bottom:.8rem;font-weight:500;}
+.family-title{font-family:'Bebas Neue',cursive;font-size:26px;letter-spacing:1px;color:var(--text);margin-bottom:.5rem;}
+.family-desc{font-size:13px;line-height:1.8;color:var(--text-dim);}
+.family-members{display:flex;gap:.5rem;flex-wrap:wrap;margin-top:1.1rem;}
+.member-chip{
+  display:inline-flex;align-items:center;gap:6px;
+  padding:6px 14px;border-radius:100px;font-size:12px;font-weight:500;
+  background:rgba(127,255,179,0.06);border:0.5px solid rgba(127,255,179,0.18);color:var(--green);
+  transition:background .25s;
+}
+.member-chip:hover{background:rgba(127,255,179,0.1);}
+.member-chip .chip-role{font-size:10px;color:rgba(127,255,179,0.5);margin-left:2px;}
+
+/* ─── HOBBIES ─── */
+.hobbies-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:1rem;margin-bottom:1rem;}
+.hobby-card{
+  background:var(--surface);border:0.5px solid var(--border);
+  border-radius:18px;padding:1.8rem 1.4rem;text-align:center;
+  transition:border-color .3s,background .3s,transform .3s;
+  position:relative;overflow:hidden;
+}
+.hobby-card::before{content:'';position:absolute;inset:0;opacity:0;transition:opacity .3s;}
+.hobby-card.bball-h::before{background:radial-gradient(ellipse at 50% 0%,rgba(255,140,0,0.08),transparent 70%);}
+.hobby-card.chess-h::before{background:radial-gradient(ellipse at 50% 0%,rgba(255,217,61,0.08),transparent 70%);}
+.hobby-card.art-h::before{background:radial-gradient(ellipse at 50% 0%,rgba(200,184,255,0.08),transparent 70%);}
+.hobby-card:hover{background:rgba(255,255,255,0.05);transform:translateY(-5px);}
+.hobby-card:hover::before{opacity:1;}
+.hobby-card.bball-h:hover{border-color:rgba(255,140,0,0.3);}
+.hobby-card.chess-h:hover{border-color:rgba(255,217,61,0.3);}
+.hobby-card.art-h:hover{border-color:rgba(200,184,255,0.3);}
+.hobby-emoji{font-size:36px;display:block;margin-bottom:.9rem;}
+.hobby-name{font-size:14px;font-weight:600;color:var(--text);margin-bottom:.4rem;letter-spacing:.3px;}
+.hobby-sub{font-size:11px;color:var(--text-dim);line-height:1.6;}
+
+/* ─── PERSON CARDS (with real photo) ─── */
+.person-card{border-radius:22px;overflow:hidden;border:0.5px solid var(--border);background:var(--surface);transition:transform .3s,border-color .3s,box-shadow .3s;margin-bottom:1rem;}
+.person-card:hover{transform:translateY(-4px);}
+.person-card.bball{border-color:rgba(255,140,0,0.18);}
+.person-card.bball:hover{border-color:rgba(255,140,0,0.4);box-shadow:0 20px 60px rgba(255,140,0,0.08);}
+.person-card.chess-card{border-color:rgba(255,217,61,0.18);}
+.person-card.chess-card:hover{border-color:rgba(255,217,61,0.4);box-shadow:0 20px 60px rgba(255,217,61,0.06);}
+
+/* Photo banner */
+.person-banner{
+  width:100%;height:240px;
+  display:flex;align-items:center;justify-content:center;
+  position:relative;overflow:hidden;
+}
+.bball .person-banner{background:linear-gradient(135deg,#0d0500 0%,#1e0c00 40%,#0a0300 100%);}
+.chess-card .person-banner{background:linear-gradient(135deg,#050500 0%,#121200 40%,#050400 100%);}
+
+.person-photo{
+  width:100%;height:100%;object-fit:cover;object-position:top center;
+  opacity:.85;
+  transition:opacity .4s, transform .5s;
+  display:block;
+}
+.person-card:hover .person-photo{opacity:.95;transform:scale(1.03);}
+.photo-fallback{
+  width:100%;height:100%;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:8px;
+  font-size:60px;
+}
+.photo-fallback span{font-size:12px;color:rgba(240,237,232,0.3);letter-spacing:1px;}
+.photo-overlay{
+  position:absolute;inset:0;
+  pointer-events:none;
+}
+.bball .photo-overlay{background:linear-gradient(0deg,#070710 0%,rgba(7,7,16,0.25) 50%,transparent 100%);}
+.chess-card .photo-overlay{background:linear-gradient(0deg,#070710 0%,rgba(7,7,16,0.25) 50%,transparent 100%);}
+
+.photo-badge{
+  position:absolute;top:14px;left:14px;
+  display:inline-flex;align-items:center;gap:5px;
+  font-size:9px;letter-spacing:2px;text-transform:uppercase;
+  padding:4px 10px;border-radius:100px;font-weight:600;
+  backdrop-filter:blur(10px);
+}
+.bball .photo-badge{background:rgba(255,140,0,0.2);border:0.5px solid rgba(255,140,0,0.4);color:#ffaa44;}
+.chess-card .photo-badge{background:rgba(255,217,61,0.15);border:0.5px solid rgba(255,217,61,0.35);color:#ffd93d;}
+
+.person-body{padding:1.4rem 1.6rem 1.6rem;}
+.person-name{font-family:'Bebas Neue',cursive;font-size:26px;letter-spacing:1.5px;color:var(--text);margin-bottom:.25rem;}
+.person-title{font-size:11px;color:var(--text-faint);margin-bottom:1.2rem;letter-spacing:.5px;}
+.achievements{display:flex;flex-direction:column;gap:8px;}
+.ach-item{display:flex;align-items:flex-start;gap:10px;font-size:12px;line-height:1.5;color:rgba(240,237,232,0.6);}
+.ach-dot{width:4px;height:4px;border-radius:50%;flex-shrink:0;margin-top:6px;}
+.bball .ach-dot{background:#ffaa44;box-shadow:0 0 6px rgba(255,170,68,0.5);}
+.chess-card .ach-dot{background:#ffd93d;box-shadow:0 0 6px rgba(255,217,61,0.4);}
+.ach-item strong{color:var(--text);font-weight:600;}
+
+/* ─── GAME SECTION ─── */
+.game-section{
+  border-radius:22px;overflow:hidden;
+  border:0.5px solid rgba(255,140,0,0.2);
+  background:rgba(255,255,255,0.02);
+  margin-bottom:1rem;
+  box-shadow:0 0 60px rgba(255,140,0,0.04);
+}
+.game-header{
+  padding:1.3rem 1.6rem;
+  background:rgba(255,140,0,0.04);
+  border-bottom:0.5px solid rgba(255,140,0,0.1);
+  display:flex;justify-content:space-between;align-items:center;
+}
+.game-title-wrap{display:flex;align-items:center;gap:10px;}
+.game-tag{font-size:9px;letter-spacing:2px;text-transform:uppercase;padding:3px 9px;border-radius:100px;background:rgba(255,140,0,0.12);border:0.5px solid rgba(255,140,0,0.3);color:#ffaa44;font-weight:500;}
+.game-title{font-family:'Bebas Neue',cursive;font-size:20px;letter-spacing:1px;color:var(--text);}
+.game-score-wrap{display:flex;gap:1.8rem;align-items:center;}
+.score-item{text-align:center;}
+.score-val{font-family:'Bebas Neue',cursive;font-size:30px;color:#ffaa44;line-height:1;text-shadow:0 0 20px rgba(255,170,68,0.4);}
+.score-lbl{font-size:9px;color:rgba(240,237,232,0.3);letter-spacing:1px;text-transform:uppercase;}
+.game-canvas-wrap{position:relative;background:linear-gradient(180deg,#0a0500 0%,#0d0800 40%,#060305 100%);overflow:hidden;cursor:none;}
+#gameCanvas{display:block;width:100%;height:auto;touch-action:none;}
+.game-ui{
+  padding:1rem 1.6rem;
+  display:flex;justify-content:space-between;align-items:center;
+  border-top:0.5px solid rgba(255,255,255,0.04);
+  flex-wrap:wrap;gap:.8rem;
+}
+.power-wrap{display:flex;align-items:center;gap:10px;flex:1;}
+.power-label{font-size:10px;color:rgba(240,237,232,0.35);letter-spacing:1px;text-transform:uppercase;white-space:nowrap;}
+.power-bar{flex:1;height:6px;background:rgba(255,255,255,0.07);border-radius:3px;overflow:hidden;min-width:80px;}
+.power-fill{height:100%;width:0%;background:linear-gradient(90deg,#ffaa44,#ff4400);border-radius:3px;transition:width .05s;}
+.game-hint{font-size:11px;color:rgba(240,237,232,0.25);text-align:right;}
+#gameMsg{font-family:'Bebas Neue',cursive;font-size:13px;letter-spacing:1px;color:#ffaa44;min-width:80px;text-align:center;}
+
+/* ─── CONTACT ─── */
+.contact-grid{display:grid;grid-template-columns:1fr 1fr;gap:1rem;margin-bottom:3.5rem;}
+.contact-card{
+  display:flex;align-items:center;gap:16px;
+  background:var(--surface);border:0.5px solid var(--border);
+  border-radius:16px;padding:1.3rem 1.5rem;
+  transition:border-color .3s,background .3s,transform .3s;
+}
+.contact-card:hover{border-color:rgba(200,184,255,0.2);background:rgba(255,255,255,0.04);transform:translateY(-2px);}
+.contact-icon{width:44px;height:44px;border-radius:12px;flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:20px;}
+.contact-icon.purple{background:rgba(200,184,255,0.08);border:0.5px solid rgba(200,184,255,0.15);}
+.contact-icon.green{background:rgba(127,255,179,0.07);border:0.5px solid rgba(127,255,179,0.15);}
+.contact-label{font-size:10px;color:var(--text-faint);letter-spacing:1px;text-transform:uppercase;margin-bottom:4px;}
+.contact-value{font-size:13px;font-weight:500;color:var(--text);}
+
+footer{
+  border-top:0.5px solid var(--border);
+  padding:2.5rem 0;text-align:center;
+  font-size:11px;color:var(--text-faint);letter-spacing:1.5px;
+}
+
+/* ─── SCROLL FADE IN ─── */
+.fade-in{opacity:0;transform:translateY(20px);transition:opacity .7s ease, transform .7s ease;}
+.fade-in.visible{opacity:1;transform:translateY(0);}
+</style>
+</head>
+<body>
+
+<div class="blob blob-1"></div>
+<div class="blob blob-2"></div>
+<div class="blob blob-3"></div>
+<div class="blob blob-4"></div>
+
+<div class="container">
+
+  <nav>
+    <div class="nav-logo">ODB</div>
+    <div class="nav-links">
+      <a href="#about">Тухай</a>
+      <a href="#family">Гэр бүл</a>
+      <a href="#hobby">Хобби</a>
+      <a href="#game">Тоглоом</a>
+      <a href="#contact">Холбоо</a>
+    </div>
+  </nav>
+
+  <!-- ─── HERO ─── -->
+  <section class="hero fade-in" id="about">
+    <div>
+      <div class="hero-eyebrow">Сурагч · Улаанбаатар</div>
+      <h1 class="hero-name">Од<span>баяр</span></h1>
+      <p class="hero-desc">49 дүгээр сургуулийн 11А ангийн сурагч. Сагс бөмбөг, шатар, зураг зурах — эдгээр бол миний дэлхий.</p>
+      <div class="badge-row">
+        <span class="badge badge-school"><span class="badge-dot"></span>49-р сургууль</span>
+        <span class="badge badge-grade">11А анги</span>
+      </div>
+    </div>
+    <div class="avatar-wrap">
+      <div class="avatar-ring"></div>
+      <div class="avatar-inner">О</div>
+    </div>
+  </section>
+
+  <div class="stats-row fade-in">
+    <div class="stat"><span class="stat-number">11</span><span class="stat-label">Анги</span></div>
+    <div class="stat"><span class="stat-number">49</span><span class="stat-label">Сургууль</span></div>
+    <div class="stat"><span class="stat-number">3</span><span class="stat-label">Хобби</span></div>
+  </div>
+
+  <!-- ─── FAMILY ─── -->
+  <div class="section-divider fade-in" id="family"><span>Гэр бүл</span></div>
+  <div class="family-banner fade-in">
+    <div class="family-icon-wrap">
+      <div class="family-icon-big">🏠</div>
+    </div>
+    <div class="family-content">
+      <div class="family-tag">💚 Гэр бүл</div>
+      <div class="family-title">Манай гэр бүл</div>
+      <p class="family-desc">Бид нийт дөрөв: аав, ээж, эгч, мөн хамгийн бага нь — би. Эгч маань үргэлж урам зориг, дэмжлэг өгдөг жинхэнэ баатар маань юм.</p>
+      <div class="family-members">
+        <div class="member-chip">👨 Аав <span class="chip-role">· Толгой</span></div>
+        <div class="member-chip">👩 Ээж <span class="chip-role">· Зүрх</span></div>
+        <div class="member-chip">👧 Эгч <span class="chip-role">· Ах дүү</span></div>
+        <div class="member-chip">🧑 Одбаяр <span class="chip-role">· Бага хүү</span></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ─── HOBBIES ─── -->
+  <div class="section-divider fade-in" id="hobby"><span>Хобби ба сонирхол</span></div>
+  <div class="hobbies-grid fade-in">
+    <div class="hobby-card bball-h">
+      <span class="hobby-emoji">🏀</span>
+      <div class="hobby-name">Сагс бөмбөг</div>
+      <div class="hobby-sub">Талбай дээр эрч хүч, тактик, багийн нэгдэл</div>
+    </div>
+    <div class="hobby-card chess-h">
+      <span class="hobby-emoji">♟️</span>
+      <div class="hobby-name">Шатар</div>
+      <div class="hobby-sub">Стратеги сэтгэлгээ, тэвчээр, оюуны тэмцэл</div>
+    </div>
+    <div class="hobby-card art-h">
+      <span class="hobby-emoji">🎨</span>
+      <div class="hobby-name">Зураг зурах</div>
+      <div class="hobby-sub">Бүтээлч гар, өнгө, хэлбэр, уран сэтгэмж</div>
+    </div>
+  </div>
+
+  <!-- ─── CURRY ─── -->
+  <div class="section-divider fade-in"><span>Дуртай сагсчин</span></div>
+  <div class="person-card bball fade-in">
+    <div class="person-banner">
+      <img
+        class="person-photo"
+        id="curryImg"
+        src="https://upload.wikimedia.org/wikipedia/commons/thumb/5/5e/Stephen_Curry_2022_%28cropped%29.jpg/400px-Stephen_Curry_2022_%28cropped%29.jpg"
+        alt="Stephen Curry"
+        onerror="document.getElementById('curryFallback').style.display='flex';this.style.display='none';"
+      />
+      <div class="photo-fallback" id="curryFallback" style="display:none;">🏀<span>Stephen Curry</span></div>
+      <div class="photo-overlay"></div>
+      <div class="photo-badge">🏀 Golden State Warriors</div>
+    </div>
+    <div class="person-body">
+      <div class="person-name">Stephen Curry</div>
+      <div class="person-title">Golden State Warriors · #30 · Point Guard</div>
+      <div class="achievements">
+        <div class="ach-item"><span class="ach-dot"></span><span><strong>4× NBA аварга</strong> — 2015, 2017, 2018, 2022</span></div>
+        <div class="ach-item"><span class="ach-dot"></span><span><strong>2× Хамгийн үнэт тоглогч</strong> — 2015, 2016 (2016 нэгдсэн саналаар — NBA-н анхных)</span></div>
+        <div class="ach-item"><span class="ach-dot"></span><span><strong>NBA Финалын MVP</strong> — 2022</span></div>
+        <div class="ach-item"><span class="ach-dot"></span><span><strong>NBA-н бүх цагийн 3 оноот шидэлтийн рекорд</strong> — 4,225+</span></div>
+        <div class="ach-item"><span class="ach-dot"></span><span><strong>73-9</strong> — 2015-16 NBA-н түүхэн дэх хамгийн олон ялалт</span></div>
+        <div class="ach-item"><span class="ach-dot"></span><span><strong>Олимпийн алтан медаль</strong> — 2024 Парис</span></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ─── FISCHER ─── -->
+  <div class="section-divider fade-in"><span>Дуртай шатарчин</span></div>
+  <div class="person-card chess-card fade-in">
+    <div class="person-banner">
+      <img
+        class="person-photo"
+        id="fischerImg"
+        src="https://upload.wikimedia.org/wikipedia/commons/thumb/d/d1/Bobby_Fischer_1960_in_Leipzig_vor_dem_Umzug.jpg/400px-Bobby_Fischer_1960_in_Leipzig_vor_dem_Umzug.jpg"
+        alt="Bobby Fischer"
+        onerror="document.getElementById('fischerFallback').style.display='flex';this.style.display='none';"
+      />
+      <div class="photo-fallback" id="fischerFallback" style="display:none;">♟️<span>Bobby Fischer</span></div>
+      <div class="photo-overlay"></div>
+      <div class="photo-badge">♟️ Дэлхийн аварга · 1972</div>
+    </div>
+    <div class="person-body">
+      <div class="person-name">Bobby Fischer</div>
+      <div class="person-title">АНУ · 11-р Дэлхийн шатрын аварга · 1943–2008</div>
+      <div class="achievements">
+        <div class="ach-item"><span class="ach-dot"></span><span><strong>Дэлхийн аварга 1972</strong> — "Зуун жилийн тоглолт" — Спасскийг 12.5–8.5-аар ялсан</span></div>
+        <div class="ach-item"><span class="ach-dot"></span><span><strong>8× АНУ-ын аварга</strong> — 14 насандаа хамгийн залуу аварга</span></div>
+        <div class="ach-item"><span class="ach-dot"></span><span><strong>Хамгийн залуу Гроссмейстер</strong> — 15 насандаа — 1958</span></div>
+        <div class="ach-item"><span class="ach-dot"></span><span><strong>1964 АНУ аварга — 11/11</strong> — турнирын түүхэнд ганц удаа тохиолдсон</span></div>
+        <div class="ach-item"><span class="ach-dot"></span><span><strong>20 дараалсан ялалт</strong> — Тайманов, Ларсен нарыг 6-0-оор ялсан</span></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ─── GAME ─── -->
+  <div class="section-divider fade-in" id="game"><span>Мини тоглоом</span></div>
+  <div class="game-section fade-in">
+    <div class="game-header">
+      <div class="game-title-wrap">
+        <span class="game-tag">🏀 Mini Game</span>
+        <span class="game-title">Сагс шидэх</span>
+      </div>
+      <div class="game-score-wrap">
+        <div class="score-item">
+          <div class="score-val" id="scoreVal">0</div>
+          <div class="score-lbl">Оноо</div>
+        </div>
+        <div class="score-item">
+          <div class="score-val" id="shotsVal">0</div>
+          <div class="score-lbl">Шидэлт</div>
+        </div>
+        <div class="score-item">
+          <div class="score-val" id="pctVal">0%</div>
+          <div class="score-lbl">Нарийвч</div>
+        </div>
+      </div>
+    </div>
+    <div class="game-canvas-wrap">
+      <canvas id="gameCanvas" width="860" height="400"></canvas>
+    </div>
+    <div class="game-ui">
+      <div class="power-wrap">
+        <span class="power-label">Хүч</span>
+        <div class="power-bar"><div class="power-fill" id="powerFill"></div></div>
+        <span id="gameMsg">Дарж байгаарай</span>
+      </div>
+      <span class="game-hint">Хулганаар чиглүүл · Дарж хүч нэм · Суллаж шид</span>
+    </div>
+  </div>
+
+  <!-- ─── CONTACT ─── -->
+  <div class="section-divider fade-in" id="contact"><span>Холбоо барих</span></div>
+  <div class="contact-grid fade-in">
+    <div class="contact-card">
+      <div class="contact-icon purple">📞</div>
+      <div>
+        <div class="contact-label">Утас</div>
+        <div class="contact-value">9076 2727</div>
+      </div>
+    </div>
+    <div class="contact-card">
+      <div class="contact-icon green">✉️</div>
+      <div>
+        <div class="contact-label">Имэйл</div>
+        <div class="contact-value">odkooo0708@gmail.com</div>
+      </div>
+    </div>
+  </div>
+
+  <footer>© 2025 Одбаяр · 49-р сургууль · 11А анги · Улаанбаатар</footer>
+</div>
+
+<script>
+// ── SCROLL ANIMATIONS ──
+const fadeEls = document.querySelectorAll('.fade-in');
+const io = new IntersectionObserver(entries=>{
+  entries.forEach(e=>{if(e.isIntersecting){e.target.classList.add('visible');}});
+},{threshold:0.1});
+fadeEls.forEach(el=>io.observe(el));
+
+// ============================================================
+//  BASKETBALL MINI GAME
+// ============================================================
+const canvas = document.getElementById('gameCanvas');
+const ctx = canvas.getContext('2d');
+
+const W = 860;
+const H = 400;
+canvas.width = W;
+canvas.height = H;
+
+let score = 0;
+let shots = 0;
+let made = 0;
+let holding = false;
+let power = 0;
+let powerDir = 1;
+let ball = null;
+let particles = [];
+let rimShake = 0;
+let missFlash = 0;
+let makeFlash = 0;
+let stars = [];
+let floaters = [];
+
+let mx = W / 2, my = H - 60;
+
+const HOOP = {
+  x: W * 0.65,
+  y: H * 0.32,
+  rimW: 52,
+  rimH: 7,
+  poleH: 200,
+  speed: 1.2,
+  dir: 1,
+  boardW: 10,
+  boardH: 90,
+};
+
+const BALL_START = { x: W * 0.18, y: H - 70 };
+let ballPos = { ...BALL_START };
+
+const GRAVITY = 0.38;
+
+// Generate stars
+for (let i = 0; i < 80; i++) {
+  stars.push({ x: Math.random() * W, y: Math.random() * H * 0.7, r: Math.random() * 1.2 + 0.3, a: Math.random() });
+}
+
+function drawBackground() {
+  // Court floor
+  const grad = ctx.createLinearGradient(0, H * 0.7, 0, H);
+  grad.addColorStop(0, '#1a0a00');
+  grad.addColorStop(1, '#0a0500');
+  ctx.fillStyle = grad;
+  ctx.fillRect(0, H * 0.7, W, H * 0.3);
+
+  // Stars
+  stars.forEach(s => {
+    ctx.beginPath();
+    ctx.arc(s.x, s.y, s.r, 0, Math.PI * 2);
+    ctx.fillStyle = `rgba(255,255,255,${s.a * 0.5})`;
+    ctx.fill();
+  });
+
+  // Court lines
+  ctx.strokeStyle = 'rgba(255,140,0,0.06)';
+  ctx.lineWidth = 1;
+  ctx.beginPath();
+  ctx.moveTo(0, H * 0.72);
+  ctx.lineTo(W, H * 0.72);
+  ctx.stroke();
+}
+
+function drawHoop() {
+  const x = HOOP.x + (rimShake > 0 ? (Math.random() - 0.5) * rimShake : 0);
+  const y = HOOP.y;
+
+  // Pole
+  ctx.beginPath();
+  ctx.moveTo(x + HOOP.rimW + 12, y - 10);
+  ctx.lineTo(x + HOOP.rimW + 12, y + HOOP.poleH);
+  ctx.strokeStyle = 'rgba(255,180,80,0.5)';
+  ctx.lineWidth = 6;
+  ctx.stroke();
+
+  // Backboard
+  ctx.fillStyle = 'rgba(255,255,255,0.06)';
+  ctx.strokeStyle = 'rgba(255,255,255,0.15)';
+  ctx.lineWidth = 1;
+  ctx.beginPath();
+  ctx.roundRect(x + HOOP.rimW + 6, y - 60, HOOP.boardW, HOOP.boardH, 3);
+  ctx.fill();
+  ctx.stroke();
+
+  // Net
+  const netX = x;
+  const netY = y + HOOP.rimH;
+  const netW = HOOP.rimW;
+  const netH = 36;
+  ctx.strokeStyle = 'rgba(255,255,255,0.18)';
+  ctx.lineWidth = 1;
+  for (let i = 0; i <= 5; i++) {
+    const px = netX + (netW / 5) * i;
+    const spread = i * 2 - 5;
+    ctx.beginPath();
+    ctx.moveTo(px, netY);
+    ctx.lineTo(px + spread, netY + netH);
+    ctx.stroke();
+  }
+  for (let j = 1; j <= 4; j++) {
+    ctx.beginPath();
+    ctx.moveTo(netX, netY + (netH / 4) * j);
+    ctx.lineTo(netX + netW, netY + (netH / 4) * j);
+    ctx.stroke();
+  }
+
+  // Rim glow
+  if (makeFlash > 0) {
+    ctx.shadowBlur = 18;
+    ctx.shadowColor = '#00ff88';
+  }
+
+  // Left rim
+  ctx.beginPath();
+  ctx.ellipse(x, y, 5, 3.5, 0, 0, Math.PI * 2);
+  ctx.fillStyle = '#e05500';
+  ctx.fill();
+  ctx.shadowBlur = 0;
+
+  // Right rim
+  ctx.beginPath();
+  ctx.ellipse(x + HOOP.rimW, y, 5, 3.5, 0, 0, Math.PI * 2);
+  ctx.fillStyle = '#e05500';
+  ctx.fill();
+
+  // Rim bar
+  ctx.beginPath();
+  ctx.moveTo(x, y);
+  ctx.lineTo(x + HOOP.rimW, y);
+  ctx.strokeStyle = '#e05500';
+  ctx.lineWidth = HOOP.rimH;
+  ctx.lineCap = 'round';
+  ctx.stroke();
+  ctx.lineCap = 'butt';
+}
+
+function drawBallStatic() {
+  if (ball) return;
+  const bx = ballPos.x;
+  const by = ballPos.y;
+  const r = 18;
+
+  // Glow
+  ctx.shadowBlur = 25;
+  ctx.shadowColor = 'rgba(255,140,0,0.5)';
+
+  // Ball body
+  const grad = ctx.createRadialGradient(bx - 5, by - 6, 2, bx, by, r);
+  grad.addColorStop(0, '#ff9933');
+  grad.addColorStop(0.5, '#e05500');
+  grad.addColorStop(1, '#6b2500');
+  ctx.beginPath();
+  ctx.arc(bx, by, r, 0, Math.PI * 2);
+  ctx.fillStyle = grad;
+  ctx.fill();
+  ctx.shadowBlur = 0;
+
+  // Lines
+  ctx.strokeStyle = 'rgba(0,0,0,0.55)';
+  ctx.lineWidth = 1.2;
+  ctx.beginPath();
+  ctx.moveTo(bx - r, by);
+  ctx.lineTo(bx + r, by);
+  ctx.stroke();
+  ctx.beginPath();
+  ctx.arc(bx, by, r * 0.6, 0.2, Math.PI - 0.2);
+  ctx.stroke();
+  ctx.beginPath();
+  ctx.arc(bx, by, r * 0.6, Math.PI + 0.2, -0.2);
+  ctx.stroke();
+}
+
+function drawFlyingBall() {
+  if (!ball) return;
+
+  // Trail
+  ball.trail.forEach((t, i) => {
+    const a = (i / ball.trail.length) * 0.3;
+    ctx.beginPath();
+    ctx.arc(t.x, t.y, ball.r * (i / ball.trail.length) * 0.7, 0, Math.PI * 2);
+    ctx.fillStyle = `rgba(255,140,0,${a})`;
+    ctx.fill();
+  });
+
+  ctx.save();
+  ctx.translate(ball.x, ball.y);
+  ctx.rotate(ball.rot);
+
+  ctx.shadowBlur = 20;
+  ctx.shadowColor = 'rgba(255,140,0,0.4)';
+  const grad = ctx.createRadialGradient(-5, -6, 2, 0, 0, ball.r);
+  grad.addColorStop(0, '#ff9933');
+  grad.addColorStop(0.5, '#e05500');
+  grad.addColorStop(1, '#6b2500');
+  ctx.beginPath();
+  ctx.arc(0, 0, ball.r, 0, Math.PI * 2);
+  ctx.fillStyle = grad;
+  ctx.fill();
+  ctx.shadowBlur = 0;
+
+  ctx.strokeStyle = 'rgba(0,0,0,0.55)';
+  ctx.lineWidth = 1.2;
+  ctx.beginPath();
+  ctx.moveTo(-ball.r, 0);
+  ctx.lineTo(ball.r, 0);
+  ctx.stroke();
+  ctx.beginPath();
+  ctx.arc(0, 0, ball.r * 0.6, 0.2, Math.PI - 0.2);
+  ctx.stroke();
+  ctx.beginPath();
+  ctx.arc(0, 0, ball.r * 0.6, Math.PI + 0.2, -0.2);
+  ctx.stroke();
+  ctx.restore();
+}
+
+function drawPowerIndicator() {
+  if (!holding) return;
+  ctx.beginPath();
+  ctx.arc(ballPos.x, ballPos.y, 22 + power * 0.15, 0, Math.PI * 2);
+  ctx.strokeStyle = `rgba(255,${Math.floor(170 - power * 1.2)},68,${0.3 + power * 0.005})`;
+  ctx.lineWidth = 1.5;
+  ctx.stroke();
+}
+
+function spawnParticles(x, y, color, n) {
+  for (let i = 0; i < n; i++) {
+    particles.push({
+      x, y,
+      vx: (Math.random() - 0.5) * 5,
+      vy: (Math.random() - 1) * 5,
+      r: Math.random() * 3 + 1,
+      life: 30 + Math.random() * 20,
+      color,
+    });
+  }
+}
+
+function drawParticles() {
+  particles.forEach(p => {
+    ctx.beginPath();
+    ctx.arc(p.x, p.y, p.r * (p.life / 50), 0, Math.PI * 2);
+    ctx.fillStyle = p.color;
+    ctx.globalAlpha = p.life / 50;
+    ctx.fill();
+    ctx.globalAlpha = 1;
+  });
+}
+
+function addFloater(x, y, text, color, size) {
+  floaters.push({ x, y, text, color, size, life: 60, vy: -1.2 });
+}
+
+function drawFloaters() {
+  floaters.forEach(f => {
+    ctx.font = `${f.size}px 'Bebas Neue', cursive`;
+    ctx.fillStyle = f.color;
+    ctx.globalAlpha = f.life / 60;
+    ctx.textAlign = 'center';
+    ctx.fillText(f.text, f.x, f.y);
+    ctx.globalAlpha = 1;
+  });
+  ctx.textAlign = 'left';
+}
+
+function drawCursor() {
+  ctx.beginPath();
+  ctx.arc(mx, my, 6, 0, Math.PI * 2);
+  ctx.strokeStyle = 'rgba(255,255,255,0.4)';
+  ctx.lineWidth = 1.5;
+  ctx.stroke();
+  ctx.beginPath();
+  ctx.arc(mx, my, 2, 0, Math.PI * 2);
+  ctx.fillStyle = 'rgba(255,255,255,0.7)';
+  ctx.fill();
+}
+
+function checkScore() {
+  if (!ball) return;
+  const x = HOOP.x + (rimShake > 0 ? (Math.random() - 0.5) * rimShake : 0);
+  const y = HOOP.y;
+  const cx = x + HOOP.rimW / 2;
+  const rimY = y;
+
+  if (ball.vy > 0 &&
+      ball.x > x + 5 && ball.x < x + HOOP.rimW - 5 &&
+      Math.abs(ball.y - rimY) < 8) {
+    score += 2;
+    shots++;
+    made++;
+    makeFlash = 15;
+    rimShake = 0;
+    spawnParticles(cx, rimY, '#ffaa44', 18);
+    spawnParticles(cx, rimY, '#ffffff', 8);
+    addFloater(cx, rimY - 30, '+2', '#00ff88', 28);
+    updateUI();
+    ball = null;
+    ballPos = { ...BALL_START };
+  } else if (ball.y > H + 40 || ball.x < -40 || ball.x > W + 40) {
+    shots++;
+    missFlash = 8;
+    rimShake = 0;
+    addFloater(ball.x, ball.y - 20, 'Miss', '#ff5555', 20);
+    updateUI();
+    ball = null;
+    ballPos = { ...BALL_START };
+  }
+
+  const rimLeft = { x: x, y: rimY };
+  const rimRight = { x: x + HOOP.rimW, y: rimY };
+  [rimLeft, rimRight].forEach(rim => {
+    const dx = ball.x - rim.x;
+    const dy = ball.y - rim.y;
+    const dist = Math.sqrt(dx * dx + dy * dy);
+    if (dist < ball.r + 5) {
+      ball.vx *= -0.5;
+      ball.vy *= -0.5;
+      rimShake = 4;
+      spawnParticles(rim.x, rim.y, '#e05500', 5);
+    }
+  });
+}
+
+function updateUI() {
+  document.getElementById('scoreVal').textContent = score;
+  document.getElementById('shotsVal').textContent = shots;
+  const pct = shots > 0 ? Math.round((made / shots) * 100) : 0;
+  document.getElementById('pctVal').textContent = pct + '%';
+}
+
+function gameLoop() {
+  ctx.clearRect(0, 0, W, H);
+  drawBackground();
+
+  HOOP.x += HOOP.speed * HOOP.dir;
+  if (HOOP.x > W * 0.78 || HOOP.x < W * 0.45) HOOP.dir *= -1;
+
+  if (makeFlash > 0) makeFlash--;
+  if (missFlash > 0) missFlash--;
+  if (rimShake > 0) rimShake -= 0.4;
+
+  if (holding) {
+    power += powerDir * 1.8;
+    if (power >= 100 || power <= 0) powerDir *= -1;
+    document.getElementById('powerFill').style.width = power + '%';
+    document.getElementById('gameMsg').textContent = 'Суллаарай!';
+  } else {
+    document.getElementById('gameMsg').textContent = ball ? '...' : 'Дарж байгаарай';
+  }
+
+  if (ball) {
+    ball.trail.push({ x: ball.x, y: ball.y });
+    if (ball.trail.length > 10) ball.trail.shift();
+    ball.vy += GRAVITY;
+    ball.x += ball.vx;
+    ball.y += ball.vy;
+    ball.rot += 0.1;
+    checkScore();
+  }
+
+  particles.forEach(p => { p.x += p.vx; p.y += p.vy; p.vy += 0.15; p.life--; });
+  particles = particles.filter(p => p.life > 0);
+  floaters.forEach(f => { f.y += f.vy; f.life--; });
+  floaters = floaters.filter(f => f.life > 0);
+
+  if (missFlash > 0) {
+    ctx.save(); ctx.globalAlpha = missFlash * 0.025;
+    ctx.fillStyle = '#ff0000'; ctx.fillRect(0, 0, W, H); ctx.restore();
+  }
+  if (makeFlash > 0) {
+    ctx.save(); ctx.globalAlpha = makeFlash * 0.025;
+    ctx.fillStyle = '#00ff88'; ctx.fillRect(0, 0, W, H); ctx.restore();
+  }
+
+  drawHoop();
+  drawFlyingBall();
+  drawBallStatic();
+  drawPowerIndicator();
+  drawParticles();
+  drawFloaters();
+  drawCursor();
+
+  requestAnimationFrame(gameLoop);
+}
+
+canvas.addEventListener('mousemove', e => {
+  const rect = canvas.getBoundingClientRect();
+  mx = (e.clientX - rect.left) * (W / rect.width);
+  my = (e.clientY - rect.top) * (H / rect.height);
+});
+canvas.addEventListener('mousedown', e => { if (ball) return; holding = true; power = 10; powerDir = 1; });
+canvas.addEventListener('mouseup', e => {
+  if (!holding || ball) return;
+  holding = false;
+  const dx = mx - ballPos.x;
+  const dy = my - ballPos.y;
+  const dist = Math.sqrt(dx * dx + dy * dy);
+  const spd = (power / 100) * 22 + 6;
+  const hoopCx = HOOP.x + HOOP.rimW / 2;
+  const hoopCy = HOOP.y;
+  const aimX = (hoopCx - ballPos.x);
+  const aimY = (hoopCy - ballPos.y);
+  const aimDist = Math.sqrt(aimX * aimX + aimY * aimY);
+  const blendX = aimX / aimDist * 0.7 + (dx / (dist || 1)) * 0.3;
+  const blendY = aimY / aimDist * 0.7 + (dy / (dist || 1)) * 0.3;
+  const bDist = Math.sqrt(blendX * blendX + blendY * blendY);
+  ball = { x: ballPos.x, y: ballPos.y, vx: (blendX / bDist) * spd, vy: (blendY / bDist) * spd, r: 18, rot: 0, trail: [] };
+  power = 0;
+  document.getElementById('powerFill').style.width = '0%';
+});
+canvas.addEventListener('touchstart', e => { e.preventDefault(); if (ball) return; holding = true; power = 10; powerDir = 1; }, {passive:false});
+canvas.addEventListener('touchmove', e => {
+  e.preventDefault();
+  const rect = canvas.getBoundingClientRect();
+  mx = (e.touches[0].clientX - rect.left) * (W / rect.width);
+  my = (e.touches[0].clientY - rect.top) * (H / rect.height);
+}, {passive:false});
+canvas.addEventListener('touchend', e => { e.preventDefault(); canvas.dispatchEvent(new MouseEvent('mouseup')); }, {passive:false});
+
+gameLoop();
+</script>
+</body>
+</html>
